@@ -9,10 +9,10 @@ module SAL_TB_SCN_RW_MIX;
      */
     `include "SAL_TB_COMMON.svh"
 
-    localparam int NUM_READS = 64;
-    localparam int NUM_WRITES = 64;
-    localparam int RD_WINDOW = 4;
-    localparam int WR_WINDOW = 2;
+    localparam int NUM_READS = 256;
+    localparam int NUM_WRITES = 256;
+    localparam int RD_WINDOW = 16;
+    localparam int WR_WINDOW = 8;
 
     task run_read_stream();
         int issued;
@@ -25,8 +25,8 @@ module SAL_TB_SCN_RW_MIX;
                 addr = pack_addr(rand_ra(), rand_ba(), rand_ca());
                 issue_read(axi_id_t'(j), addr);
             end
-            wait_for_reads(issued + batch);
             issued += batch;
+            throttle_reads(RD_WINDOW);
         end
     endtask
 
@@ -41,8 +41,8 @@ module SAL_TB_SCN_RW_MIX;
                 addr = pack_addr(rand_ra(), rand_ba(), rand_ca());
                 issue_write(axi_id_t'(j), addr, rand_data());
             end
-            wait_for_writes(issued + batch);
             issued += batch;
+            throttle_writes(WR_WINDOW);
         end
     endtask
 
@@ -54,6 +54,8 @@ module SAL_TB_SCN_RW_MIX;
             run_write_stream();
         join
 
+        wait_for_reads(NUM_READS);
+        wait_for_writes(NUM_WRITES);
         report_stats("RW_MIX");
         report_write_stats("RW_MIX");
         $finish;

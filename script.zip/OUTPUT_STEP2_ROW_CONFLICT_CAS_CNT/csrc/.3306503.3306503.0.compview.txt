@@ -1,0 +1,9 @@
+{"vcs1":{"timestamp_begin":1768865027.048650178, "rt":1.06, "ut":0.88, "st":0.18}}
+{"vcselab":{"timestamp_begin":1768865028.172046931, "rt":0.39, "ut":0.22, "st":0.10}}
+{"link":{"timestamp_begin":1768865028.609663694, "rt":0.18, "ut":0.12, "st":0.06}}
+{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1768865026.521987403}
+{"VCS_COMP_START_TIME": 1768865026.521987403}
+{"VCS_COMP_END_TIME": 1768865028.911402379}
+{"VCS_USER_OPTIONS": "-full64 -sverilog -debug_access+all -kdb +lint=PCWM -LDFLAGS -Wl,--no-as-needed +incdir+/home/urp03/lju/for_silhum/2025_W_URP_DDR2_bkctrl_sched/script/../STEP2/RTL+/home/urp03/lju/for_silhum/2025_W_URP_DDR2_bkctrl_sched/script/../STEP2/SIM/DDRPHY+/home/urp03/lju/for_silhum/2025_W_URP_DDR2_bkctrl_sched/script/../STEP2/SIM/DRAM+/home/urp03/lju/for_silhum/2025_W_URP_DDR2_bkctrl_sched/script/../STEP2/SIM/TB -f /home/urp03/lju/for_silhum/2025_W_URP_DDR2_bkctrl_sched/script/../script/filelist_step2_scn_row_conflict_sched_cas_cnt.f"}
+{"vcs1": {"peak_mem": 453196}}
+{"vcselab": {"peak_mem": 167052}}

@@ -9,8 +9,8 @@ module SAL_TB_SCN_HOTSPOT;
      */
     `include "SAL_TB_COMMON.svh"
 
-    localparam int NUM_REQ = 128;
-    localparam int RD_WINDOW = 4;
+    localparam int NUM_REQ = 256;
+    localparam int RD_WINDOW = 16;
 
     initial begin
         init_tb();
@@ -27,10 +27,11 @@ module SAL_TB_SCN_HOTSPOT;
                 end
                 issue_read(axi_id_t'(j), addr);
             end
-            wait_for_reads(issued + batch);
             issued += batch;
+            throttle_reads(RD_WINDOW);
         end
 
+        wait_for_reads(NUM_REQ);
         report_stats("HOTSPOT");
         $finish;
     end

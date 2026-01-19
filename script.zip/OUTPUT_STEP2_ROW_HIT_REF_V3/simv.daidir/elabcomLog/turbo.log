@@ -1,0 +1,3 @@
+Command Line: /usr/synopsys/vcs/V-2023.12-SP2/linux64/bin/elabcom -logdir simv.daidir/elabcomLog -simvdaidir simv.daidir -lib simv.daidir/work -saveLevel -elab simv.daidir/kdb -simflow -simdir simv.daidir/kdb_libs -topfile simv.daidir/.elabcomTopFile -ssv -ssy -Lf work +disable_message+C00380+C00381 +disable_message+C00388+C00389
+uname(Linux ubuntu 5.15.0-164-generic #174-Ubuntu SMP Fri Nov 14 20:25:16 UTC 2025 x86_64)
+au time 0.101949 0.029800 0.037780 delta 90963968 90963968 total 355098624 355098624

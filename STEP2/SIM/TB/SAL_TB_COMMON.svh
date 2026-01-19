@@ -85,11 +85,13 @@
 
     localparam int MAX_ID = (1 << `AXI_ID_WIDTH);
 
-    int unsigned rd_issue_cycle [0:MAX_ID-1];
-    int unsigned wr_issue_cycle [0:MAX_ID-1];
+    int unsigned rd_issue_q [0:MAX_ID-1][$];
+    int unsigned wr_issue_q [0:MAX_ID-1][$];
 
     int unsigned rd_completed;
     int unsigned wr_completed;
+    int unsigned rd_issued_total;
+    int unsigned wr_issued_total;
     int unsigned rd_lat_sum;
     int unsigned wr_lat_sum;
     int unsigned rd_lat_max;
@@ -117,6 +119,8 @@
         axi_r_if.rready = 1'b1;
         axi_b_if.bready = 1'b1;
 
+        rd_issued_total = 0;
+        wr_issued_total = 0;
         rd_completed = 0;
         wr_completed = 0;
         rd_lat_sum = 0;
@@ -126,8 +130,8 @@
         rd_lat_list.delete();
         wr_lat_list.delete();
         for (i = 0; i < MAX_ID; i++) begin
-            rd_issue_cycle[i] = 0;
-            wr_issue_cycle[i] = 0;
+            rd_issue_q[i].delete();
+            wr_issue_q[i].delete();
             rd_lat_max_id[i] = 0;
             rd_issued_id[i] = 0;
             rd_completed_id[i] = 0;
@@ -168,16 +172,18 @@
 
     task issue_read(input axi_id_t id, input axi_addr_t addr);
         axi_ar_if.send(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
-        rd_issue_cycle[id] = cycle;
+        rd_issue_q[id].push_back(cycle);
         rd_issued_id[id] = rd_issued_id[id] + 1;
+        rd_issued_total = rd_issued_total + 1;
     endtask
 
     task issue_write(input axi_id_t id, input axi_addr_t addr, input logic [255:0] data);
         axi_aw_if.send(id, addr, 'd1, `AXI_SIZE_128, `AXI_BURST_INCR);
-        wr_issue_cycle[id] = cycle;
+        wr_issue_q[id].push_back(cycle);
         axi_w_if.send(id, data[0:127], 16'hFFFF, 1'b0);
         axi_w_if.send(id, data[128:255], 16'hFFFF, 1'b1);
         wr_issued_id[id] = wr_issued_id[id] + 1;
+        wr_issued_total = wr_issued_total + 1;
     endtask
 
     task wait_for_reads(input int target);
@@ -188,6 +194,18 @@
 
     task wait_for_writes(input int target);
         while (wr_completed < target) begin
+            @(posedge clk);
+        end
+    endtask
+
+    task throttle_reads(input int max_outstanding);
+        while ((int'(rd_issued_total) - int'(rd_completed)) >= max_outstanding) begin
+            @(posedge clk);
+        end
+    endtask
+
+    task throttle_writes(input int max_outstanding);
+        while ((int'(wr_issued_total) - int'(wr_completed)) >= max_outstanding) begin
             @(posedge clk);
         end
     endtask
@@ -267,7 +285,13 @@
             if (axi_r_if.rvalid && axi_r_if.rready) begin
                 if (axi_r_if.rlast) begin
                     int unsigned lat;
-                    lat = cycle - rd_issue_cycle[axi_r_if.rid];
+                    int unsigned issue_cycle;
+                    if (rd_issue_q[axi_r_if.rid].size() > 0) begin
+                        issue_cycle = rd_issue_q[axi_r_if.rid].pop_front();
+                    end else begin
+                        issue_cycle = cycle;
+                    end
+                    lat = cycle - issue_cycle;
                     rd_lat_sum = rd_lat_sum + lat;
                     if (lat > rd_lat_max) rd_lat_max = lat;
                     if (lat > rd_lat_max_id[axi_r_if.rid]) rd_lat_max_id[axi_r_if.rid] = lat;
@@ -278,7 +302,13 @@
             end
             if (axi_b_if.bvalid && axi_b_if.bready) begin
                 int unsigned lat;
-                lat = cycle - wr_issue_cycle[axi_b_if.bid];
+                int unsigned issue_cycle;
+                if (wr_issue_q[axi_b_if.bid].size() > 0) begin
+                    issue_cycle = wr_issue_q[axi_b_if.bid].pop_front();
+                end else begin
+                    issue_cycle = cycle;
+                end
+                lat = cycle - issue_cycle;
                 wr_lat_sum = wr_lat_sum + lat;
                 if (lat > wr_lat_max) wr_lat_max = lat;
                 wr_lat_list.push_back(lat);

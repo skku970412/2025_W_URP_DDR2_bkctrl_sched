@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Usage: ./run.compile_scn_rw_mix_sched_ref_v3
+STEPN=2
+source ./common.sh $STEPN
+
+SCN_NAME="RW_MIX"
+SCHED_TAG="REF_V3"
+FILELIST="${ROOT_PATH}/script/filelist_step2_scn_rw_mix_sched_ref_v3.f"
+RUN_DIR="${ROOT_PATH}/script/OUTPUT_STEP2_${SCN_NAME}_${SCHED_TAG}"
+
+echo "Cleaning up the old directory"
+rm -rf $RUN_DIR
+echo "Creating a new directory"
+mkdir -p $RUN_DIR
+cd $RUN_DIR
+echo "Compiling"
+$COMPILE_CMD $COMPILE_OPTIONS $COMPILE_INCDIR -f $FILELIST

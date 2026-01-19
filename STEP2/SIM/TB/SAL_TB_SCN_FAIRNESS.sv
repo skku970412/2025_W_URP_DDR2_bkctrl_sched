@@ -4,14 +4,18 @@
 module SAL_TB_SCN_FAIRNESS;
     /*
      * Scenario: Fairness stress
-     * Traffic: Heavy stream (IDs 0..3) + light stream (IDs 4..7)
+     * Traffic: Heavy stream (ID 0) + light stream (IDs 1..4)
      * Goal: Observe tail latency for light requests under pressure
      */
     `include "SAL_TB_COMMON.svh"
 
-    localparam int NUM_HEAVY = 64;
-    localparam int NUM_LIGHT = 16;
-    localparam int RD_WINDOW = 4;
+    localparam int NUM_HEAVY = 512;
+    localparam int NUM_LIGHT = 128;
+    localparam int RD_WINDOW = 32;
+    localparam int HEAVY_BURST = 32;
+    localparam int LIGHT_ID_BASE = 1;
+    localparam int LIGHT_ID_COUNT = 4;
+    localparam axi_id_t HEAVY_ID = axi_id_t'(0);
 
     initial begin
         int heavy_issued;
@@ -28,11 +32,11 @@ module SAL_TB_SCN_FAIRNESS;
             int batch;
 
             if (heavy_issued < NUM_HEAVY) begin
-                batch = (NUM_HEAVY - heavy_issued > RD_WINDOW) ? RD_WINDOW : (NUM_HEAVY - heavy_issued);
+                batch = (NUM_HEAVY - heavy_issued > HEAVY_BURST) ? HEAVY_BURST : (NUM_HEAVY - heavy_issued);
                 for (int j = 0; j < batch; j++) begin
                     axi_addr_t addr;
                     addr = pack_addr('d0, 'd0, dram_ca_t'((heavy_issued + j) % (1 << `DRAM_CA_WIDTH)));
-                    issue_read(axi_id_t'(j), addr);
+                    issue_read(HEAVY_ID, addr);
                 end
                 heavy_issued += batch;
                 total_issued += batch;
@@ -41,7 +45,7 @@ module SAL_TB_SCN_FAIRNESS;
             if (light_issued < NUM_LIGHT) begin
                 axi_addr_t addr;
                 axi_id_t lid;
-                lid = axi_id_t'(RD_WINDOW + (light_issued % RD_WINDOW));
+                lid = axi_id_t'(LIGHT_ID_BASE + (light_issued % LIGHT_ID_COUNT));
                 addr = pack_addr(
                     dram_ra_t'((light_issued % 4) + 1),
                     dram_ba_t'((light_issued % ((1 << `DRAM_BA_WIDTH) - 1)) + 1),
@@ -52,9 +56,10 @@ module SAL_TB_SCN_FAIRNESS;
                 total_issued += 1;
             end
 
-            wait_for_reads(total_issued);
+            throttle_reads(RD_WINDOW);
         end
 
+        wait_for_reads(total_issued);
         report_stats("FAIRNESS");
         report_id_stats();
         $finish;
