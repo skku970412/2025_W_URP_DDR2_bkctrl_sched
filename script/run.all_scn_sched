@@ -9,7 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
 SCENARIOS=(row_hit row_conflict bank_interleave random hotspot rw_mix fairness)
-SCHEDS=(fcfs cas_cnt rr)
+SCHEDS=(rr fcfs cas_cnt ref_v0 ref_v1 ref_v2 ref_v3)
 
 for scn in "${SCENARIOS[@]}"; do
   for sched in "${SCHEDS[@]}"; do

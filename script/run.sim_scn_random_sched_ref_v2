@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Usage: ./run.sim_scn_random_sched_ref_v2
+STEPN=2
+source ./common.sh $STEPN
+
+SCN_NAME="RANDOM"
+SCHED_TAG="REF_V2"
+RUN_DIR="${ROOT_PATH}/script/OUTPUT_STEP2_${SCN_NAME}_${SCHED_TAG}"
+LOG_DIR="${ROOT_PATH}/script/LOGS"
+LOG_FILE="${LOG_DIR}/sim_${SCN_NAME}_${SCHED_TAG}.log"
+
+mkdir -p "$LOG_DIR"
+
+if [ -e "$RUN_DIR/simv" ]; then
+    cd "$RUN_DIR"
+    ./simv | tee "$LOG_FILE"
+else
+    echo "Compile file does not exist"
+    exit 1
+fi

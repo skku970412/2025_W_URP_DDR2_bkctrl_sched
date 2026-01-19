@@ -59,12 +59,17 @@
   - `fcfs`: `STEP2/RTL/SAL_SCHED.sv` (기본 FR-FCFS)
   - `cas_cnt`: `STEP2/RTL/SAL_SCHED_CAS_CNT_0120.sv` (CAS 연속 제한)
   - `rr`: `STEP2/RTL/SAL_SCHED_RR.sv` (round-robin)
+  - `ref_v0`: `STEP2/RTL/SAL_SCHED_REF_V0.sv` (refactor base, aging/bliss/wdrain off)
+  - `ref_v1`: `STEP2/RTL/SAL_SCHED_REF_V1_AGING.sv` (aging only)
+  - `ref_v2`: `STEP2/RTL/SAL_SCHED_REF_V2_AGING_BLISS.sv` (aging + BLISS)
+  - `ref_v3`: `STEP2/RTL/SAL_SCHED_REF_V3_FINAL.sv` (aging + BLISS + write-drain)
+- 기준선(baseline)으로는 `rr` 사용을 권장.
 - 파일명 규칙
   - compile: `script/run.compile_scn_<name>_sched_<sched>`
   - sim: `script/run.sim_scn_<name>_sched_<sched>`
-  - filelist: `script/filelist_step2_scn_<name>_sched_<sched>.f`
-  - output: `script/OUTPUT_STEP2_<SCN>_<SCHED>`
-  - log: `script/LOGS/sim_<SCN>_<SCHED>.log`
+- filelist: `script/filelist_step2_scn_<name>_sched_<sched>.f`
+- output: `script/OUTPUT_STEP2_<SCN>_<SCHED>`
+- log: `script/LOGS/sim_<SCN>_<SCHED>.log`
 
 ## 전체 배치 실행 스크립트
 - 모든 시나리오 x 모든 스케줄러 실행: `script/run.all_scn_sched`

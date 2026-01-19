@@ -22,7 +22,13 @@ name 목록: `row_hit`, `row_conflict`, `bank_interleave`, `random`, `hotspot`, 
 - output: `OUTPUT_STEP2_<SCN>_<SCHED>`
 - log: `LOGS/sim_<SCN>_<SCHED>.log`
 
-sched 목록: `fcfs`, `cas_cnt`, `rr`
+sched 목록: `fcfs`, `cas_cnt`, `rr`, `ref_v0`, `ref_v1`, `ref_v2`, `ref_v3`
+
+ref 버전 설명
+- `ref_v0`: refactor base (aging/bliss/wdrain off)
+- `ref_v1`: aging only
+- `ref_v2`: aging + BLISS
+- `ref_v3`: aging + BLISS + write-drain
 
 ## 전체 배치 실행
 - 모든 시나리오 x 모든 스케줄러: `run.all_scn_sched`
