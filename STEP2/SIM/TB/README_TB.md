@@ -44,6 +44,16 @@
 - 시나리오 교체 시 해당 TB 파일만 filelist에 포함하거나,
   시나리오별로 별도 filelist를 만들어 사용.
 
+## 시나리오별 컴파일/시뮬레이션 스크립트
+- 파일명 규칙
+  - compile: `script/run.compile_scn_<name>`
+  - sim: `script/run.sim_scn_<name>`
+  - filelist: `script/filelist_step2_scn_<name>.f`
+  - output: `script/OUTPUT_STEP2_<SCN>`
+- name 목록: `row_hit`, `row_conflict`, `bank_interleave`, `random`, `hotspot`, `rw_mix`, `fairness`
+- 실행 위치: `script/` 디렉터리에서 실행(예: `./run.compile_scn_row_hit`)
+- 로그 저장 위치: `script/LOGS/sim_<SCN>.log`
+
 ## 결과 정리 가이드
 - 동일 workload/seed로 베이스라인 vs 공정성 버전 비교.
 - 표/그래프로 평균/99p/최악 지연과 공정성 지표를 병기.

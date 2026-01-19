@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Usage: ./run.sim_scn_row_conflict
+STEPN=2
+source ./common.sh $STEPN
+
+SCN_NAME="ROW_CONFLICT"
+RUN_DIR="${ROOT_PATH}/script/OUTPUT_STEP2_${SCN_NAME}"
+LOG_DIR="${ROOT_PATH}/script/LOGS"
+LOG_FILE="${LOG_DIR}/sim_${SCN_NAME}.log"
+
+mkdir -p "$LOG_DIR"
+
+if [ -e "$RUN_DIR/simv" ]; then
+    cd "$RUN_DIR"
+    ./simv | tee "$LOG_FILE"
+else
+    echo "Compile file does not exist"
+    exit 1
+fi
