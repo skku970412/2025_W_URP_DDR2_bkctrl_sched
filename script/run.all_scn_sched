@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Run all scenarios across all schedulers
+# Usage: ./run.all_scn_sched
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
+
+SCENARIOS=(row_hit row_conflict bank_interleave random hotspot rw_mix fairness)
+SCHEDS=(fcfs cas_cnt rr)
+
+for scn in "${SCENARIOS[@]}"; do
+  for sched in "${SCHEDS[@]}"; do
+    echo "=== SCN=${scn} SCHED=${sched} ==="
+    ./run.compile_scn_${scn}_sched_${sched}
+    ./run.sim_scn_${scn}_sched_${sched}
+  done
+done

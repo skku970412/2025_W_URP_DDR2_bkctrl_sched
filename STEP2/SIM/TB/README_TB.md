@@ -54,6 +54,21 @@
 - 실행 위치: `script/` 디렉터리에서 실행(예: `./run.compile_scn_row_hit`)
 - 로그 저장 위치: `script/LOGS/sim_<SCN>.log`
 
+## 스케줄러 변경용 스크립트
+- 스케줄러 종류
+  - `fcfs`: `STEP2/RTL/SAL_SCHED.sv` (기본 FR-FCFS)
+  - `cas_cnt`: `STEP2/RTL/SAL_SCHED_CAS_CNT_0120.sv` (CAS 연속 제한)
+  - `rr`: `STEP2/RTL/SAL_SCHED_RR.sv` (round-robin)
+- 파일명 규칙
+  - compile: `script/run.compile_scn_<name>_sched_<sched>`
+  - sim: `script/run.sim_scn_<name>_sched_<sched>`
+  - filelist: `script/filelist_step2_scn_<name>_sched_<sched>.f`
+  - output: `script/OUTPUT_STEP2_<SCN>_<SCHED>`
+  - log: `script/LOGS/sim_<SCN>_<SCHED>.log`
+
+## 전체 배치 실행 스크립트
+- 모든 시나리오 x 모든 스케줄러 실행: `script/run.all_scn_sched`
+
 ## 결과 정리 가이드
 - 동일 workload/seed로 베이스라인 vs 공정성 버전 비교.
 - 표/그래프로 평균/99p/최악 지연과 공정성 지표를 병기.
