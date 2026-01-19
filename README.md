@@ -1,5 +1,10 @@
 ﻿# DDR2 Memory Controller (SystemVerilog)
 
+![Language](https://img.shields.io/badge/Language-SystemVerilog-1f6feb)
+![Target](https://img.shields.io/badge/Target-DDR2-0e8a16)
+![Protocol](https://img.shields.io/badge/Protocol-AXI%20%2F%20APB-ff8c00)
+![PHY](https://img.shields.io/badge/PHY-DFI-555)
+
 SystemVerilog 기반 DDR2 컨트롤러 학습/구현 프로젝트입니다. DRAM 동작 원리를 이해하고, 타이밍 제약을 만족하는 스케줄링과 PHY 인터페이스 설계를 목표로 합니다.
 
 ![Overview](DOC/FIG/Overview.png)

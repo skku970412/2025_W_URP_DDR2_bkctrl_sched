@@ -7,6 +7,7 @@
 ## 파일명 규칙
 - 시나리오 TB: `SAL_TB_SCN_*.sv`
 - 문서: `STEP2/SIM/TB/README_TB.md`
+- 공통 코드: `STEP2/SIM/TB/SAL_TB_COMMON.svh` (클럭/리셋, DUT 연결, 계측 유틸)
 
 ## 시나리오 목록(제안)
 - `STEP2/SIM/TB/SAL_TB_SCN_ROW_HIT.sv`
